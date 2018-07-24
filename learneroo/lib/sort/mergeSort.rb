@@ -28,4 +28,4 @@ def merge(left, right)
 end
 
 puts mergeSort(test_1) == "ab ef ab ef ij to be or not to be ij that is the question cd gh cd gh"
-print mergeSort(test_1).map{ |pair| pair.last}.join(" ")
+puts mergeSort(test_1).map{ |pair| pair.last}.join(" ")

@@ -4,39 +4,68 @@
 
 #what if sort by lowest start times and only choose the smallest diff then then kick the index to its finish time
 
-def scheduler(ar)
-  mergeSort(ar)
+class Event
+  attr_accessor :start_time, :end_time, :overlaps
 
-end
-
-def mergeSort(ar)
-  if ar.length <= 1
-    ar
-  else
-    middle = (ar.length / 2).floor
-    left = mergeSort(ar[0...middle])
-    right = mergeSort(ar[middle..ar.length])
-    merge(left, right)
+  def initialize(start_time, end_time, overlaps=0)
+    @start_time = start_time
+    @end_time = end_time
+    @overlaps = overlaps
   end
 end
 
-def merge(left, right)
-  if left.empty?
-    right
-  elsif right.empty?
-    left
-  elsif left.first.first <= right.first.first
-    [left.first] + merge(left[1..left.length], right)
-  else
-    [right.first] + merge(left, right[1..right.length])
+
+def scheduler(a)
+
+  events = Array.new
+  schedule = Array.new
+
+  a.each_slice(2) do |start, finish|
+    meeting = Event.new(start, finish)
+    events << meeting
+  end
+
+  no_overlaps?(events)
+
+  #if the array is huge with no overlaps == 0 change this to select the event with the smallest overlap
+  schedule = events.select{ |event| event.overlaps == 0 }
+
+  events.sort_by!{ |event| event.overlaps }
+
+  events.each{ |data| events.delete(data) if schedule.include?(data) }
+
+  events.each{ |remaining| schedule << remaining if can_event_fit_in_schedule?(remaining, schedule) }
+
+  schedule.sort_by!{ |timeslot| timeslot.start_time }
+
+  schedule.each{ |selected| print "[#{selected.start_time}, #{selected.end_time}] " }
+
+  puts
+end
+
+def can_event_fit_in_schedule?(event, schedule) #not working
+  schedule.none?{ |scheduled| event.end_time >= scheduled.start_time && event.start_time <= scheduled.start_time }
+end
+
+def no_overlaps?(events)
+  for i in (0...events.length)
+    for j in (0...events.length)
+      if events[i].end_time >= events[j].start_time && events[i].start_time <= events[j].start_time && i != j
+        events[i].overlaps += 1
+      end
+    end
   end
 end
 
-a = [[4, 8], [1, 3], [7, 9], [5, 6]]
-b = [3, 8, 1, 2, 3, 9, 1, 5, 4, 5, 8, 14]
-c = [0, 1, 14, 16, 4, 8, 10, 12, 7, 9, 8, 15, 3, 5]
+tests = Array.new
 
-print scheduler(a)
+tests << [4, 8, 1, 3, 7, 9, 5, 6]
+tests << [3, 8, 1, 2, 3, 9, 1, 5, 4, 5, 8, 14]
+tests << [0, 1, 14, 16, 4, 8, 10, 12, 7, 9, 8, 15, 3, 5]
+
+tests.each do |example|
+  scheduler(example)
+end
 
 # correct
 # [1, 3] [5, 6] [7, 9]

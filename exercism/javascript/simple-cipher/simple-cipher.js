@@ -1,41 +1,51 @@
-var KEY_LENGTH = 100;
-var POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const KEY_LENGTH = 100;
+const POSSIBLE = "abcdefghijklmnopqrstuvwxyz";
 
 function make_key() {
-  var text = "";
-  for (var i = 0; i < KEY_LENGTH; i++) {
-    text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
+  let new_key = "";
+  for (let i = 0; i < KEY_LENGTH; i++) {
+    new_key += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
   };
-  return text;
+  return new_key;
 };
 
-function xCode(key, inText, sign) {
-	console.log(key);
-	return inText.split('').reduce(function(outText, letter, ii){
-		var offset = sign * POSSIBLE.indexOf(key.charAt(mod(ii, key.length)));
-		outText += POSSIBLE.charAt(mod(POSSIBLE.indexOf(letter)+offset ,POSSIBLE.length));
-		return outText;
-	}, "");
-}
+function shift_chars(key, text, direction) {
+  let output_text = "";
 
-function mod(n, m) {
-	return ((n % m) + m) % m;
-}
+  while (key.length < text.length) {
+    key += key;
+  };
 
-module.exports = function(key){
-	if (typeof key === 'undefined'){
+  for (let i = 0; i < text.length; i++) {
+    // Refactor using POSSIBLE instead of charCode shift
+    let charCode = (text.charCodeAt(i) - 97) + (key.charCodeAt(i) - 97) * direction;
+
+    if (charCode >= 26) {
+      charCode -= 26;
+    } else if (charCode < 0) {
+      charCode += 26;
+    }
+
+    output_text += String.fromCharCode(97 + charCode);
+  };
+  
+  return output_text;
+};
+
+export default function Cipher(key) {
+	if (typeof key === 'undefined') {
 		key = make_key();
-	} else if (key.length === 0 || key.match(/[^a-z]/,"g")){
+	} else if (key.length === 0 || key.match(/[^a-z]/,"g")) {
 		throw(new Error("Bad key"));
 	}
 
 	return {
-		key: key,
-		encode: function(plainText){
-			return xCode(this.key, plainText, 1);
+		key,
+		encode: function(plain_text){
+			return shift_chars(this.key, plain_text, 1);
 		},
-		decode: function(encodedText){
-			return xCode(this.key, encodedText, -1);
+		decode: function(encoded_text){
+			return shift_chars(this.key, encoded_text, -1);
 		}
 	};
 };

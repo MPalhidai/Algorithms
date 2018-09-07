@@ -21,25 +21,24 @@ const encode = (text) => {
   return compression
 }
 
-const decode = (data) => { 
+const decode = (data) => {
   if (data == '') return data;
   let arr = data.split('');
   let index = 0;
   let text = "";
+  let numbers = "";
   while (index < arr.length) {
-    if (/[0-9]/.test(Number(arr[index]))) {
-      let i = index;
-      while (/[0-9]/.test(Number(arr[i]))) {
-        i++;
-      }
-      let times = Number(arr.slice(index,i).join(""));
-      text += `${arr[i].repeat(times)}`;
-      index += i;
+    if (/[0-9]/.test(Number(arr[index])) && arr[index] != ' ') {
+      numbers += `${arr[index]}`;
+    } else if (numbers != "") {
+      text += `${arr[index].repeat(Number(numbers))}`;
+      numbers = "";
     } else {
       text += `${arr[index]}`;
     }
     index++;
   }
+
   return text;
 }
 

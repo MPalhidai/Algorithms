@@ -1,20 +1,35 @@
 const LinkedList = () => {
 
   // This will be interesting with ES6 and function factory structure
-  const node = (data, next, previous) => {
 
+  // Refactor with methods to set head and set tail
+
+
+
+
+
+  const node = (data, next, previous) => {
     return { data, next, previous }
   }
 
   let head = new node(null,null,null)
   let tail = new node(null,null,null)
-  let count = 0
+
+  const count = () => {
+    let node = head
+    let listSize = 0
+    while (node != null && node.data != null) {
+      listSize++
+      node = node.next
+    }
+    return listSize
+  }
 
   const push = (obj) => {
     if (head.data == null) { //first node
       head.data = obj
       head.next = tail
-    } else if (tail.data == null){ //second node
+    } else if (tail.data == null) { //second node
       tail.data = obj
       tail.previous = head
     } else {
@@ -22,7 +37,6 @@ const LinkedList = () => {
       tail.next = newNode
       tail = newNode
     }
-    count++
   }
 
   const pop = () => {
@@ -36,19 +50,36 @@ const LinkedList = () => {
       } else {
         output = head.data
       }
-      count--
     }
     return output
   }
 
   const shift = () => {
-    // set head to next node return the node.data that was removed
-    // count--
+    let output = head.data;
+    if (output == null) {
+      throw (new Error ("Can not shift an empty list"))
+    } else {
+      if (head != tail) {
+        head = head.next
+        head.previous = null
+      } else {
+        output = tail.data
+      }
+    }
+    return output
   }
 
-  const unshift = () => {
-    // add new node by setting its next node as current head then change head to the new node
-    // count++
+  const unshift = (obj) => {
+    if (tail.data == null) { //first node
+      tail.data = obj
+      tail.previous = head
+    } else if (head.data == null) { //second node
+      head.data = obj
+      head.next = tail
+    } else {
+      let newNode = new node(obj, head, null)
+      head = newNode
+    }
   }
 
   return { push, pop, shift, unshift, count }

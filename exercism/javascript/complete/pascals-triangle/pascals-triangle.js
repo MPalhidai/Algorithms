@@ -12,10 +12,6 @@ const Triangle = (level) => {
     }
     rows.push(array)
   }
-
-
-
-
   const lastRow = rows[rows.length-1]
   return { rows, lastRow }
 }

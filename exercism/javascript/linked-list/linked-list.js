@@ -1,39 +1,29 @@
 const LinkedList = () => {
 
-  // This will be interesting with ES6 and function factory structure
+  let head = null
+  let tail = null
 
-  // Refactor with methods to set head and set tail
-
-
-
-
-
-  const node = (data, next, previous) => {
+  const Node = (data, next, previous) => {
     return { data, next, previous }
   }
 
-  let head = new node(null,null,null)
-  let tail = new node(null,null,null)
-
   const count = () => {
-    let node = head
+    let counter = head
     let listSize = 0
-    while (node != null && node.data != null) {
+    while (counter != null && counter.data != null) {
       listSize++
-      node = node.next
+      counter = counter.next
     }
     return listSize
   }
 
   const push = (obj) => {
-    if (head.data == null) { //first node
-      head.data = obj
-      head.next = tail
-    } else if (tail.data == null) { //second node
-      tail.data = obj
-      tail.previous = head
+    let newNode = new Node(obj, null, null)
+    if (!head) {
+      head = newNode
+      tail = newNode
     } else {
-      let newNode = new node(obj, null, tail)
+      newNode.previous = tail
       tail.next = newNode
       tail = newNode
     }
@@ -41,48 +31,51 @@ const LinkedList = () => {
 
   const pop = () => {
     let output = tail.data;
-    if (output == null) {
+    if (!head) {
       throw (new Error ("Can not pop an empty list"))
+    } else if (tail != head) {
+      tail = tail.previous
+      tail.next = null
     } else {
-      if (tail != head) {
-        tail = tail.previous
-        tail.next = null
-      } else {
-        output = head.data
-      }
+      output = head.data
+      head = null
+      tail = null
     }
     return output
   }
 
   const shift = () => {
     let output = head.data;
-    if (output == null) {
+    if (!head) {
       throw (new Error ("Can not shift an empty list"))
+    } else if (head != tail) {
+      head = head.next
+      head.previous = null
     } else {
-      if (head != tail) {
-        head = head.next
-        head.previous = null
-      } else {
-        output = tail.data
-      }
+      output = tail.data
+      head = null
+      tail = null
     }
     return output
   }
 
   const unshift = (obj) => {
-    if (tail.data == null) { //first node
-      tail.data = obj
-      tail.previous = head
-    } else if (head.data == null) { //second node
-      head.data = obj
-      head.next = tail
+    let newNode = new Node(obj, null, null)
+    if (!head) {
+      head = newNode
+      tail = newNode
     } else {
-      let newNode = new node(obj, head, null)
+      newNode.next = head
+      head.previous = newNode
       head = newNode
     }
   }
 
-  return { push, pop, shift, unshift, count }
+  const deleteValue = (obj) => {
+
+  }
+
+  return { push, pop, shift, unshift, count, deleteValue }
 }
 
 export default LinkedList

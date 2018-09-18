@@ -58,7 +58,7 @@ describe('LinkedList', () => {
     expect(list.count()).toBe(1);
     expect(list.pop()).toBe(20);
   });
-  xtest('sets head/tail after shifting last element', () => {
+  test('sets head/tail after shifting last element', () => {
     const list = new LinkedList();
     list.unshift(10);
     list.shift();
@@ -66,42 +66,42 @@ describe('LinkedList', () => {
     expect(list.count()).toBe(1);
     expect(list.shift()).toBe(20);
   });
-  xtest('deletes the element with the specified value from the list', () => {
+  test('deleteValues the element with the specified value from the list', () => {
     const list = new LinkedList();
     list.push(10);
     list.push(20);
     list.push(30);
-    list.delete(20);
+    list.deleteValue(20);
     expect(list.count()).toBe(2);
     expect(list.pop()).toBe(30);
     expect(list.shift()).toBe(10);
   });
-  xtest('deletes the only element', () => {
+  xtest('deleteValues the only element', () => {
     const list = new LinkedList();
     list.push(10);
-    list.delete(10);
+    list.deleteValue(10);
     expect(list.count()).toBe(0);
   });
-  xtest('deletes the first of two elements', () => {
+  xtest('deleteValues the first of two elements', () => {
     const list = new LinkedList();
     list.push(10);
     list.push(20);
-    list.delete(10);
+    list.deleteValue(10);
     expect(list.count()).toBe(1);
     expect(list.pop()).toBe(20);
   });
-  xtest('deletes the second of two elements', () => {
+  xtest('deleteValues the second of two elements', () => {
     const list = new LinkedList();
     list.push(10);
     list.push(20);
-    list.delete(20);
+    list.deleteValue(20);
     expect(list.count()).toBe(1);
     expect(list.pop()).toBe(10);
   });
-  xtest('delete does not modify the list if the element is not found', () => {
+  xtest('deleteValue does not modify the list if the element is not found', () => {
     const list = new LinkedList();
     list.push(10);
-    list.delete(20);
+    list.deleteValue(20);
     expect(list.count()).toBe(1);
   });
 });

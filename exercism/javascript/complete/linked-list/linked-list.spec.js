@@ -76,13 +76,13 @@ describe('LinkedList', () => {
     expect(list.pop()).toBe(30);
     expect(list.shift()).toBe(10);
   });
-  xtest('deleteValues the only element', () => {
+  test('deleteValues the only element', () => {
     const list = new LinkedList();
     list.push(10);
     list.deleteValue(10);
     expect(list.count()).toBe(0);
   });
-  xtest('deleteValues the first of two elements', () => {
+  test('deleteValues the first of two elements', () => {
     const list = new LinkedList();
     list.push(10);
     list.push(20);
@@ -90,7 +90,7 @@ describe('LinkedList', () => {
     expect(list.count()).toBe(1);
     expect(list.pop()).toBe(20);
   });
-  xtest('deleteValues the second of two elements', () => {
+  test('deleteValues the second of two elements', () => {
     const list = new LinkedList();
     list.push(10);
     list.push(20);
@@ -98,7 +98,7 @@ describe('LinkedList', () => {
     expect(list.count()).toBe(1);
     expect(list.pop()).toBe(10);
   });
-  xtest('deleteValue does not modify the list if the element is not found', () => {
+  test('deleteValue does not modify the list if the element is not found', () => {
     const list = new LinkedList();
     list.push(10);
     list.deleteValue(20);

@@ -72,7 +72,25 @@ const LinkedList = () => {
   }
 
   const deleteValue = (obj) => {
-
+    let finder = head
+    while (finder) {
+      if (finder.data == obj) {
+        if (finder == head && finder == tail) {
+          head = null
+          tail = null
+        } else if (finder == head) {
+          head = head.next
+          head.previous = null
+        } else if (finder == tail) {
+          tail = tail.previous
+          tail.next = null
+        } else {
+          finder.next.previous = finder.previous
+          finder.previous.next = finder.next
+        }
+      }
+      finder = finder.next
+    }
   }
 
   return { push, pop, shift, unshift, count, deleteValue }

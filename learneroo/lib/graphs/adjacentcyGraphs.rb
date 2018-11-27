@@ -9,9 +9,9 @@ class Node
 end
 
 class Graph
-  attr_accessor :nodes, :paths
+  attr_accessor :nodes
 
-  def initialize(nodes = [], paths = [])
+  def initialize(nodes = [])
     @nodes = nodes
   end
 
@@ -21,10 +21,10 @@ class Graph
     node.visited = true
     return node.distance if start == target
 
-    node.connections.each do |conn|
-      unless nodes[conn].visited || queue.include?(conn)
-        queue.push(conn)
-        nodes[conn].distance = node.distance + 1
+    node.connections.each do |idx, dist|
+      unless nodes[idx].visited || queue.include?(idx)
+        queue.push(idx)
+        nodes[idx].distance = node.distance + 1
       end
     end
 
@@ -45,11 +45,11 @@ grid << [[0, 3, 5],
 [3, 0, 1],
 [5, 1, 0]]
 
-def nodes_from_start(grid)
+def nodes_from_start(grid) # shortest number of stops
   nodes = []
 	grid.each do |connections|
     adj = []
-    connections.each_with_index{ |dist, idx| adj << idx if dist != 0 }
+    connections.each_with_index{ |dist, idx| adj << [ idx, dist ] if dist != 0 }
     nodes << Node.new(adj)
   end
   matrix = Graph.new(nodes)

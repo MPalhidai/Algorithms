@@ -1,37 +1,36 @@
 class Node
-  attr_accessor :visited, :connections
+  attr_accessor :visited, :connections, :distance
 
   def initialize(connections = [])
     @visited = false
     @connections = connections
+    @distance = 0
   end
 end
 
 class Graph
-  attr_accessor :nodes
+  attr_accessor :nodes, :paths
 
-  def initialize(nodes = [])
+  def initialize(nodes = [], paths = [])
     @nodes = nodes
+    @paths = paths
   end
 
-  def dfs(start, target, distance = 0)
+  def bfs(start, target, queue = [])
+
     node = nodes[start]
     node.visited = true
-    return distance if start == target
-    node.connections.each{ |conn| dfs(conn, target, distance += 1) unless node.visited }
-  end
+    @paths << node.distance if start == target
 
-  def bfs(start, target, queue = [], distance = 0)
-
-    node = nodes[start]
-    return distance if start == target
-
-    unless node.visited
-      node.connections.each {|conn| queue.push(conn) unless nodes[conn].visited }
-      node.visited = true
+    node.connections.each do |conn|
+      unless nodes[conn].visited || queue.include?(conn)
+        queue.push(conn)
+        nodes[conn].distance = node.distance + 1
+      end
     end
 
-    bfs(queue.shift(), target, queue, distance += 1) unless queue.empty?
+    bfs(queue.shift(), target, queue) unless queue.empty?
+    @paths
   end
 end
 
@@ -59,10 +58,10 @@ def nodes_from_start(grid)
   matrix = Graph.new(nodes)
 
   matrix.nodes.each_index do |i|
-    paths = []
-    paths << matrix.bfs(start = 0, i)
+    matrix.bfs(start = 0, i)
     matrix.nodes.each{ |node| node.visited = false }
-    paths.each{ |path| print "#{path} " }
+    print "#{matrix.paths.min} "
+    matrix.paths = []
   end
 end
 

@@ -15,27 +15,52 @@ class Graph
     @nodes = nodes
   end
 
-  def minimumTree(start, target = 0, queue = [], output = [])
+  def minimumTree(start)
 
     # from 0 to nodes.length check all connections and pick the shortest mark both are known then go to next node not known and connect it to the nearest connected node
+    idx = start
+    output = [] # output
+    possible_connections = []
+    until nodes.all?{ |node| node.visited } # queue
+      nodes[idx].visited = true
 
-    node = nodes[start]
-    node.visited = true
+      # tuple = nodes[idx].connections.sort_by{ |index, dist| dist }.first
 
-    node.connections.sort_by{ |idx, dist| dist }.each do |idx, dist|
-      unless nodes[idx].visited || queue.include?(idx)
-        queue << idx
-        output << dist
+      tuple = []
+      minimum_branch = Float::INFINITY
+      nodes[idx].connections.each do |index, distance|
+        if !nodes[index].visited && distance < minimum_branch
+          minimum_branch = distance
+          tuple = [index, distance]
+        end
       end
+
+      if tuple != []
+        idx = tuple.first
+      elsif nodes.any?{ |node| !node.visited }
+        idx = nodes.index{ |node| !node.visited }
+        tuple = nodes[idx].connections.sort_by{ |i, d| d }.first
+        idx = tuple.first
+        tuple = nodes[tuple.first].connections.sort_by{ |i, d| d }.first
+      end
+      output << tuple.last unless !idx
     end
-
-    minimumTree(queue.shift(), target, queue, output) unless queue.empty?
-
     return output
   end
 end
 
 grid = []
+
+grid << [[0, 4, 1, 4, 0, 0, 0, 0, 0, 0],
+[4, 0, 5, 0, 9, 9, 0, 7, 0, 0],
+[1, 5, 0, 3, 0, 0, 0, 9, 0, 0],
+[4, 0, 3, 0, 0, 0, 0, 10, 0, 18],
+[0, 9, 0, 0, 0, 2, 4, 0, 6, 0],
+[0, 9, 0, 0, 2, 0, 2, 8, 0, 0],
+[0, 0, 0, 0, 4, 2, 0, 9, 3, 9],
+[0, 7, 9, 10, 0, 8, 9, 0, 0, 8],
+[0, 0, 0, 0, 6, 0, 3, 0, 0, 9],
+[0, 0, 0, 18, 0, 0, 9, 8, 9, 0]]
 
 grid << [[0, 0, 1, 3, 0, 0],
 [0, 0, 0, 5, 0, 0],

@@ -1,52 +1,31 @@
-class Node
-  attr_accessor :visited, :connections, :distance
+def minimumTree(adjacency = grid[0])
+  vertices = adjacency.length
+  traversed_vertices = [0]
+  edges = []
 
-  def initialize(connections = [])
-    @visited = false
-    @connections = connections
-    @distance = 0
+  # using Prim's algorithm
+  while traversed_vertices.count < vertices do
+    possible_verts = adjacency.map.with_index do |col, y|
+  	{column: col, index: y } # get indices of columns
+    end.select do |col|
+  	traversed_vertices.include? col[:index] # exclude columns not traversed yet
+    end.map do |col|
+  	col[:column].map.with_index do |edge_weight, x|
+  	  {row: x, col: col[:index], weight: edge_weight} # collate edge data
+  	end.select do |vert|
+  	  not traversed_vertices.include? vert[:row] # exclude rows already traversed
+  	end
+    end.flatten
+    possible_verts.select! {|vert| vert[:weight] > 0} # get rid of -1s (ie. no edge)
+    possible_verts.sort_by! {|vert| vert[:weight]} # sort
+    best_match = possible_verts[0] # get shortest
+    edges.push best_match
+    traversed_vertices.push best_match[:row]
   end
-end
 
-class Graph
-  attr_accessor :nodes
-
-  def initialize(nodes = [])
-    @nodes = nodes
-  end
-
-  def minimumTree(start)
-
-    # from 0 to nodes.length check all connections and pick the shortest mark both are known then go to next node not known and connect it to the nearest connected node
-    idx = start
-    output = [] # output
-    possible_connections = []
-    until nodes.all?{ |node| node.visited } # queue
-      nodes[idx].visited = true
-
-      # tuple = nodes[idx].connections.sort_by{ |index, dist| dist }.first
-
-      tuple = []
-      minimum_branch = Float::INFINITY
-      nodes[idx].connections.each do |index, distance|
-        if !nodes[index].visited && distance < minimum_branch
-          minimum_branch = distance
-          tuple = [index, distance]
-        end
-      end
-
-      if tuple != []
-        idx = tuple.first
-      elsif nodes.any?{ |node| !node.visited }
-        idx = nodes.index{ |node| !node.visited }
-        tuple = nodes[idx].connections.sort_by{ |i, d| d }.first
-        idx = tuple.first
-        tuple = nodes[tuple.first].connections.sort_by{ |i, d| d }.first
-      end
-      output << tuple.last unless !idx
-    end
-    return output
-  end
+  weights = edges.map {|edge| edge[:weight]}.each{|weight| print "#{weight} "}
+  puts
+  path = edges.map {|edge| print "(#{edge[:col]}->#{edge[:row]})" }
 end
 
 grid = []
@@ -73,19 +52,7 @@ grid << [[0, 3, 5],
 [3, 0, 1],
 [5, 1, 0]]
 
-def createGraph(grid)
-  nodes = []
-	grid.each do |connections|
-    adj = []
-    connections.each_with_index{ |dist, idx| adj << [ idx, dist ] if dist != 0 }
-    nodes << Node.new(adj)
-  end
-  matrix = Graph.new(nodes)
-
-  matrix.minimumTree(from = 0).each{ |element| print "#{element} " }
-end
-
 grid.each do |try|
-	createGraph(try)
+  minimumTree(try)
   puts
 end

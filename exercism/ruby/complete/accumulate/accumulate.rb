@@ -1,5 +1,5 @@
 class Array
   def accumulate
-    self.reduce([]){|acc, el| acc << yield(el)}
+    self.map{ |x| yield(x) }
   end
 end

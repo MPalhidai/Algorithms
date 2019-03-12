@@ -2,23 +2,23 @@ class Allergies
   attr_reader :list
 
   @@allergens = {
-    eggs: 1,
-    peanuts: 2,
-    shellfish: 4,
-    strawberries: 8,
-    tomatoes: 16,
-    chocolate: 32,
+    cats: 128,
     pollen: 64,
-    cats: 128
+    chocolate: 32,
+    tomatoes: 16,
+    strawberries: 8,
+    shellfish: 4,
+    peanuts: 2,
+    eggs: 1
   }
 
   def initialize(score)
     score %= 256
     @list = []
-    @@allergens.keys.reverse.each do |allergen|
-      if @@allergens[allergen] <= score
+    @@allergens.each do |allergen, value|
+      if value <= score
         @list << allergen.to_s
-        score -= @@allergens[allergen]
+        score -= value
       end
     end
   end

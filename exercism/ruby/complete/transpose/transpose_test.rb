@@ -85,7 +85,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_first_line_longer_than_second_line
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       The fourth line.
       The fifth line.
@@ -114,7 +114,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_second_line_longer_than_first_line
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       The first line.
       The second line.
@@ -143,7 +143,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_mixed_line_length
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       The longest line.
       A long line.
@@ -175,7 +175,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_square
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       HEART
       EMBER
@@ -196,7 +196,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_rectangle
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       FRACTURE
       OUTLINED
@@ -219,7 +219,7 @@ class TransposeTest < Minitest::Test
   end
 
   def test_triangle
-    skip
+    # skip
     input = <<-INPUT.gsub(/^ {6}/, '').strip
       T
       EE

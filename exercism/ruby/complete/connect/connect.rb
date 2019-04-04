@@ -1,12 +1,13 @@
 class Board
   def initialize(board)
     @board = board.map{ |row| row.strip.scan(/[.OX]/) }
-    @size = @board.length - 1
+    @end_row = @board.length - 1
+    @end_column = @board[0].length - 1
   end
 
   def winner # X goes left to right, O goes top down
     output = ''
-    return output if @size < 0
+    return output if @board.empty?
 
     @board.each_with_index do |row, index|
       if row[0] == 'X'
@@ -26,21 +27,19 @@ class Board
   private
 
   def bfs(row, column, value, visited = [], queue = [])
-    # if it is connected more than once, it can choose the wrong path and get stuck
-
-    return true if (value == 'X' && column == @size) || (value == 'O' && row == @size)
+    return true if (value == 'X' && column == @end_column) || (value == 'O' && row == @end_row)
     visited << [row, column]
-    adjacent = [[-1,1],[-1,0],[0,1],[-1,0],[1,0],[1,-1]]
+    adjacent = [[-1,1],[-1,0],[0,1],[0,-1],[1,0],[1,-1]]
     adjacent.each do |dy, dx|
       new_row = row + dy
       new_column = column + dx
-      if new_row >= 0 && new_row <= @size && new_column >= 0 && new_column <= @size
+      if new_row >= 0 && new_row <= @end_row && new_column >= 0 && new_column <= @end_column
         if @board[new_row][new_column] == value && !visited.include?([new_row, new_column])
-          queue << [new_row, new_column]
+          queue << [new_row, new_column] unless queue.include?([new_row, new_column])
         end
       end
     end
-    coordinates = queue.pop
+    coordinates = queue.shift
     bfs(coordinates[0], coordinates[1], value, visited, queue) if coordinates
   end
 end
